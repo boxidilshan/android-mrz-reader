@@ -43,6 +43,9 @@ public final class HelpActivity extends Activity {
   // Use this key and one of the values below when launching this activity via intent. If not
   // present, the default page will be loaded.
   public static final String REQUESTED_PAGE_KEY = "requested_page_key";
+  public static final String SCAN_MESSAGE_TEXT = "SCAN_MESSAGE_TEXT";
+  public static final String PLEASE_WAIT = "PLEASE_WAIT";
+  public static final String CHECKING_INIT = "CHECKING_INIT";
   public static final String DEFAULT_PAGE = "whatsnew.html";
   public static final String ABOUT_PAGE = "about.html";
   public static final String TERMS_PAGE = "terms.html";

@@ -63,7 +63,6 @@ import androidx.core.content.ContextCompat;
 import com.googlecode.tesseract.android.TessBaseAPI;
 import com.mercuriete.mrz.reader.camera.CameraManager;
 import com.mercuriete.mrz.reader.camera.ShutterButton;
-import com.mercuriete.mrz.reader.utils.MRZCheckUtil;
 
 import org.jmrtd.lds.icao.MRZInfo;
 
@@ -255,6 +254,8 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         viewfinderView = (ViewfinderView) findViewById(R.id.viewfinder_view);
         cameraButtonView = findViewById(R.id.camera_button_view);
         resultView = findViewById(R.id.result_view);
+        TextView scanMessage = findViewById(R.id.scan_message);
+        scanMessage.setText(getIntent().getStringExtra(HelpActivity.SCAN_MESSAGE_TEXT));
 
         statusViewBottom = (TextView) findViewById(R.id.status_view_bottom);
         registerForContextMenu(statusViewBottom);
@@ -492,7 +493,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         DecodeHandler.resetDecodeState();
         handler.resetState();
         if (shutterButton != null && DISPLAY_SHUTTER_BUTTON) {
-            shutterButton.setVisibility(View.VISIBLE);
+            //shutterButton.setVisibility(View.VISIBLE);
         }
     }
 
@@ -749,11 +750,11 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 
         // Turn off capture-related UI elements
         shutterButton.setVisibility(View.GONE);
-        statusViewBottom.setVisibility(View.GONE);
-        statusViewTop.setVisibility(View.GONE);
+        statusViewBottom.setVisibility(View.INVISIBLE);
+        //statusViewTop.setVisibility(View.GONE);
         cameraButtonView.setVisibility(View.GONE);
         viewfinderView.setVisibility(View.GONE);
-        resultView.setVisibility(View.VISIBLE);
+        //resultView.setVisibility(View.VISIBLE);
 
         ImageView bitmapImageView = (ImageView) findViewById(R.id.image_view);
         lastBitmap = ocrResult.getBitmap();
@@ -778,7 +779,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         TextView translationTextView = (TextView) findViewById(R.id.translation_text_view);
         if (isTranslationActive) {
             // Handle translation text fields
-            translationLanguageLabelTextView.setVisibility(View.VISIBLE);
+            //translationLanguageLabelTextView.setVisibility(View.VISIBLE);
             translationLanguageTextView.setText(targetLanguageReadable);
             translationLanguageTextView.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL), Typeface.NORMAL);
             translationLanguageTextView.setVisibility(View.VISIBLE);
@@ -818,16 +819,14 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
                 }
             }
             ocrResult.setText(result);
-            if (ocrResult.getMeanConfidence() >= 50 && textResultTmpArr.length >= 2 && textResultTmpArr.length <= 3) {
+            if (ocrResult.getMeanConfidence() >= 65 && textResultTmpArr.length >= 2 && textResultTmpArr.length <= 3) {
                 try {
-                    if (MRZCheckUtil.check(result)) {
-                        MRZInfo mrzInfo = new MRZInfo(result);
-                        Toast.makeText(this, mrzInfo.toString().trim(), Toast.LENGTH_LONG).show();
-                        Intent returnIntent = new Intent();
-                        returnIntent.putExtra(MRZ_RESULT, mrzInfo);
-                        setResult(Activity.RESULT_OK, returnIntent);
-                        finish();
-                    }
+                    MRZInfo mrzInfo = new MRZInfo(result);
+                    //Toast.makeText(this, mrzInfo.toString().trim(), Toast.LENGTH_LONG).show();
+                    Intent returnIntent = new Intent();
+                    returnIntent.putExtra(MRZ_RESULT, mrzInfo);
+                    setResult(Activity.RESULT_OK, returnIntent);
+                    finish();
                 } catch (IllegalStateException | IllegalArgumentException e) {
                     Log.w("CACA", "checksum fail", e);
                 }
@@ -835,37 +834,37 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         }
 
 
-        // Send an OcrResultText object to the ViewfinderView for text rendering
-        viewfinderView.addResultText(new OcrResultText(ocrResult.getText(),
-                ocrResult.getWordConfidences(),
-                ocrResult.getMeanConfidence(),
-                ocrResult.getBitmapDimensions(),
-                ocrResult.getRegionBoundingBoxes(),
-                ocrResult.getTextlineBoundingBoxes(),
-                ocrResult.getStripBoundingBoxes(),
-                ocrResult.getWordBoundingBoxes(),
-                ocrResult.getCharacterBoundingBoxes()));
-
-        Integer meanConfidence = ocrResult.getMeanConfidence();
-
-        if (CONTINUOUS_DISPLAY_RECOGNIZED_TEXT) {
-            // Display the recognized text on the screen
-            statusViewTop.setText(ocrResult.getText());
-            int scaledSize = Math.max(22, 32 - ocrResult.getText().length() / 4);
-            statusViewTop.setTextSize(TypedValue.COMPLEX_UNIT_SP, scaledSize);
-            statusViewTop.setTextColor(Color.BLACK);
-            statusViewTop.setBackgroundResource(R.color.status_top_text_background);
-
-            statusViewTop.getBackground().setAlpha(meanConfidence * (255 / 100));
-        }
-
-        if (CONTINUOUS_DISPLAY_METADATA) {
-            // Display recognition-related metadata at the bottom of the screen
-            long recognitionTimeRequired = ocrResult.getRecognitionTimeRequired();
-            statusViewBottom.setTextSize(14);
-            statusViewBottom.setText("OCR: " + sourceLanguageReadable + " - Mean confidence: " +
-                    meanConfidence.toString() + " - Time required: " + recognitionTimeRequired + " ms");
-        }
+//        // Send an OcrResultText object to the ViewfinderView for text rendering
+//        viewfinderView.addResultText(new OcrResultText(ocrResult.getText(),
+//                ocrResult.getWordConfidences(),
+//                ocrResult.getMeanConfidence(),
+//                ocrResult.getBitmapDimensions(),
+//                ocrResult.getRegionBoundingBoxes(),
+//                ocrResult.getTextlineBoundingBoxes(),
+//                ocrResult.getStripBoundingBoxes(),
+//                ocrResult.getWordBoundingBoxes(),
+//                ocrResult.getCharacterBoundingBoxes()));
+//
+//        Integer meanConfidence = ocrResult.getMeanConfidence();
+//
+//        if (CONTINUOUS_DISPLAY_RECOGNIZED_TEXT) {
+//            // Display the recognized text on the screen
+//            statusViewTop.setText(ocrResult.getText());
+//            int scaledSize = Math.max(22, 32 - ocrResult.getText().length() / 4);
+//            statusViewTop.setTextSize(TypedValue.COMPLEX_UNIT_SP, scaledSize);
+//            statusViewTop.setTextColor(Color.BLACK);
+//            statusViewTop.setBackgroundResource(R.color.status_top_text_background);
+//
+//            statusViewTop.getBackground().setAlpha(meanConfidence * (255 / 100));
+//        }
+//
+//        if (CONTINUOUS_DISPLAY_METADATA) {
+//            // Display recognition-related metadata at the bottom of the screen
+//            long recognitionTimeRequired = ocrResult.getRecognitionTimeRequired();
+//            statusViewBottom.setTextSize(14);
+//            statusViewBottom.setText("OCR: " + sourceLanguageReadable + " - Mean confidence: " +
+//                    meanConfidence.toString() + " - Time required: " + recognitionTimeRequired + " ms");
+//        }
     }
 
     /**
@@ -978,17 +977,17 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
             statusViewBottom.setText("");
             statusViewBottom.setTextSize(14);
             statusViewBottom.setTextColor(getResources().getColor(R.color.status_text));
-            statusViewBottom.setVisibility(View.VISIBLE);
+            //statusViewBottom.setVisibility(View.VISIBLE);
         }
         if (CONTINUOUS_DISPLAY_RECOGNIZED_TEXT) {
             statusViewTop.setText("");
             statusViewTop.setTextSize(14);
-            statusViewTop.setVisibility(View.VISIBLE);
+            //statusViewTop.setVisibility(View.VISIBLE);
         }
         viewfinderView.setVisibility(View.VISIBLE);
-        cameraButtonView.setVisibility(View.VISIBLE);
+        //cameraButtonView.setVisibility(View.VISIBLE);
         if (DISPLAY_SHUTTER_BUTTON) {
-            shutterButton.setVisibility(View.VISIBLE);
+            //shutterButton.setVisibility(View.VISIBLE);
         }
         lastResult = null;
         viewfinderView.removeResultText();
@@ -998,9 +997,9 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
      * Displays a pop-up message showing the name of the current OCR source language.
      */
     void showLanguageName() {
-        Toast toast = Toast.makeText(this, "OCR: " + sourceLanguageReadable, Toast.LENGTH_LONG);
-        toast.setGravity(Gravity.TOP, 0, 0);
-        toast.show();
+//        Toast toast = Toast.makeText(this, "OCR: " + sourceLanguageReadable, Toast.LENGTH_LONG);
+//        toast.setGravity(Gravity.TOP, 0, 0);
+//        toast.show();
     }
 
     /**
@@ -1017,9 +1016,9 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     @SuppressWarnings("unused")
     void setButtonVisibility(boolean visible) {
         if (shutterButton != null && visible == true && DISPLAY_SHUTTER_BUTTON) {
-            shutterButton.setVisibility(View.VISIBLE);
+            //shutterButton.setVisibility(View.VISIBLE);
         } else if (shutterButton != null) {
-            shutterButton.setVisibility(View.GONE);
+            //shutterButton.setVisibility(View.GONE);
         }
     }
 

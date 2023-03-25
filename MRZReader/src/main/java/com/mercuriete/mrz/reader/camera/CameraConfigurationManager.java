@@ -91,7 +91,7 @@ final class CameraConfigurationManager {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
-        initializeTorch(parameters, prefs);
+        //initializeTorch(parameters, prefs);
         String focusMode = null;
         if (prefs.getBoolean(PreferencesActivity.KEY_AUTO_FOCUS, true)) {
             if (prefs.getBoolean(PreferencesActivity.KEY_DISABLE_CONTINUOUS_FOCUS, false)) {

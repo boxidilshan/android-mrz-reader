@@ -85,8 +85,8 @@ final class OcrInitAsyncTask extends AsyncTask<String, String, Boolean> {
   @Override
   protected void onPreExecute() {
     super.onPreExecute();
-    dialog.setTitle("Please wait");
-    dialog.setMessage("Checking for data installation...");
+    dialog.setTitle(activity.getIntent().getStringExtra(HelpActivity.PLEASE_WAIT));
+    dialog.setMessage(activity.getIntent().getStringExtra(HelpActivity.CHECKING_INIT));
     dialog.setIndeterminate(false);
     dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
     dialog.setCancelable(false);

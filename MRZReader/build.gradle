@@ -1,4 +1,4 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 
 apply plugin: 'com.hiya.jacoco-android'
 
@@ -12,6 +12,14 @@ jacocoAndroidUnitTestReport {
     xml.enabled true
 }
 
+task wrapper(type: Wrapper){
+    gradleVersion = '7.2'
+}
+
+task prepareKotlinBuildScriptModel {
+
+}
+
 tasks.withType(Test) {
     jacoco.includeNoLocationClasses = true
     jacoco.excludes = ['jdk.internal.*']
@@ -20,7 +28,6 @@ tasks.withType(Test) {
 android {
     compileSdkVersion 31
     defaultConfig {
-        applicationId "com.mercuriete.mrz.reader"
         minSdkVersion 21
         targetSdkVersion 31
         versionCode project.version_code
